@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load leaflet_tags %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <title>Map View</title>
+    <style type="text/css">
+        #gis {
+            width: 100%;
+            height: 700px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="gis"></div>
+    <script>
+        var map = L.map('gis').setView([51.505, -0.09], 3);
+        console.log(L)
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // // Assuming that you have a valid 'weather_data' variable or array
+        var weatherData = '{{ weather_data|safe }}';
+        weatherData = JSON.parse(weatherData);
+        console.log(weatherData)
+        weatherData.map((data) => {
+            var marker = L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(`Temperature: ${data.temperature} °F, Humidity: ${data.humidity}%`);
+        })
+
+        // var weatherData = '{{ weather_data|safe }}';
+        // weatherData = JSON.parse(weatherData);
+        // console.log(weatherData)
+        // weatherData.forEach(function (data) {
+        //     console.log(data.latitude, data.longitude)
+        //     L.marker([data.latitude, data.longitude])
+        //         .addTo(map).bindPopup(`Temperature: ${data.temperature} °C, Humidity: ${data.humidity}%`);
+        // });
+    </script>
+</body>
+
+</html>
